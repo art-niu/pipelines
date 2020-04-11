@@ -30,7 +30,7 @@ pipeline {
                 stage('Build-Ant') {
                     steps{
                         ws('/opt/devops/nightly/tomcat'){
-                           sh 'cd helloworld/tomcat/HelloWorld; /usr/bin/ant build.xml'
+                           sh 'cd helloworld/tomcat/HelloWorld; /usr/bin/ant -f build.xml'
                         }
                         echo 'Build Done! You can find the binary at /opt/devops/nightly/tomcat/helloworld/tomcat/HelloWorld'
                     }
