@@ -22,6 +22,7 @@ pipeline {
                             
                         }
                     }
+                }
             }
         }
         stage('Build'){
@@ -36,7 +37,8 @@ pipeline {
                 }
             }
         }
-      
+    }
+  
     post {
         success {
             echo " Build Success"
