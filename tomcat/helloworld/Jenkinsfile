@@ -15,7 +15,7 @@ pipeline {
                 stage('Checkout-HelloWorld') {
                     steps{
                         echo 'Removing original source code for internal - /opt/devops/nightly/tomcat'
-                        //sh 'rm -rf /opt/devops/nightly/tomcat'
+                        sh 'rm -rf /opt/devops/nightly/tomcat'
                         ws('/opt/devops/nightly/tomcat'){
                             echo "Workspace dir is ${pwd()}"
                             checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
