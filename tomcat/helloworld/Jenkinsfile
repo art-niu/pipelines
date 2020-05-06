@@ -1,6 +1,3 @@
-/*
-Author: Arthur Niu
-*/
 pipeline {
     agent any
     options {
