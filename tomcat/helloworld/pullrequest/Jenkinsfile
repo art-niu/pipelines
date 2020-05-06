@@ -1,0 +1,87 @@
+/*
+Author: Arthur Niu
+Project: Hello World for Tomcat
+*/
+pipeline {
+    agent any
+
+    parameters {
+        string(defaultValue: 'master', description: 'Which branch?', name: 'BRANCH_FROM')
+    }
+
+    options {
+        timeout(time: 60, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '3'))
+        disableConcurrentBuilds()
+    }
+
+    triggers { 
+        GenericTrigger(
+            genericVariables: [
+                [key: 'BRANCH_FROM', value: '$.pullrequest.fromRef.branch.name',
+                 expressionType: 'JSONPath', regexpFilter: '^((?!(release|feature)).)*$']
+            ],
+            
+            causeString: 'Triggered on Pull request $BRANCH_FROM',
+            
+            token: 'feature_tomhelloworld',
+            
+            printContributedVariables: true,
+            printPostContent: true,
+        ) 
+    }
+
+    stages {
+        stage('Checkout'){
+            steps{
+                echo 'Removing original source code for internal - /opt/devops/nightly/tomcat'
+                sh 'rm -rf /opt/devops/nightly/tomcat'
+                ws('/opt/devops/nightly/tomcat'){
+                    echo "Workspace dir is ${pwd()}"
+                    echo "Branch to be checked out is ${params.BRANCH_FROM}"
+                    checkout([$class: 'GitSCM', branches: [[name: BRANCH_FROM]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
+                        
+                    //checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
+                            
+                }
+            }
+        }
+        stage('Build'){
+            parallel {
+                stage('Build-Ant') {
+                    steps{
+                        ws('/opt/devops/nightly/tomcat'){
+                           sh 'cd helloworld/tomcat/HelloWorld; /usr/bin/ant -f build.xml'
+                        }
+                        echo 'Build Done! You can find the binary at /opt/devops/nightly/tomcat/helloworld/tomcat/HelloWorld'
+                    }
+                }
+            }
+        }
+    }
+  
+    post {
+        success {
+            echo " Build Success"
+            emailext (
+                subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: '${SCRIPT, template="jenkins-matrix-email-html.template"}',
+                recipientProviders: [[$class: 'CulpritsRecipientProvider'],[$class: 'RequesterRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+                to:'feijiangnan@hotmail.com ou.yuan@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+        failure {
+            echo " Build Failed"
+            emailext (
+                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: '${SCRIPT, template="jenkins-matrix-email-html.template"}' ,
+                recipientProviders: [[$class: 'CulpritsRecipientProvider'],[$class: 'RequesterRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+                to:'feijiangnan@hotmail.com ou.yuan@gmail.com',
+                attachLog: true, 
+                compressLog:false,
+                mimeType: 'text/html'
+            )
+        }
+    }    
+}
