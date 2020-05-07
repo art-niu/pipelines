@@ -21,7 +21,7 @@ pipeline {
             genericVariables: [
                 [key: 'BRANCH_FROM', value: '$.ref',
                  expressionType: 'JSONPath', 
-                 regexpFilter: '^Branch_(.*)_Feature$']
+                 regexpFilter: '']
             ],
             
             causeString: 'Triggered on Pull request $BRANCH_FROM',
