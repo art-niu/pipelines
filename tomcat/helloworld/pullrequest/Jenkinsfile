@@ -19,7 +19,7 @@ pipeline {
     triggers { 
         GenericTrigger(
             genericVariables: [
-                [key: 'BRANCH_FROM', value: '$.pullrequest.fromRef.branch.name',
+                [key: 'BRANCH_FROM', value: '$.repository.default_branch',
                  expressionType: 'JSONPath', regexpFilter: '^((?!(release|feature)).)*$']
             ],
             
