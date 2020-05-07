@@ -27,7 +27,7 @@ pipeline {
             
             token: 'feature_tomhelloworld',
             
-            printContributedVariables: true,
+            // printContributedVariables: true,
             printPostContent: true,
         ) 
     }
