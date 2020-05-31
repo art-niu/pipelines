@@ -11,7 +11,7 @@ pipeline {
                         sh 'rm -rf /opt/devops/pullrequest/c'
                         ws('/opt/devops/pullrequest/c'){
                             echo "Workspace dir is ${pwd()}"
-                            checkout([$class: 'GitSCM', branches: [[name: $BRANCH_NAME ]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
+                            checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME ]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
                             
                         }
            }
