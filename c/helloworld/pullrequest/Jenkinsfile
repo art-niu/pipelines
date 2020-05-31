@@ -26,7 +26,7 @@ pipeline {
                 }
     	    }
             steps {
-                sh 'cd helloworld/c/HelloWorld; make'
+                sh 'cd /opt/devops/pullrequest/c/helloworld/c/HelloWorld; make'
             }
         }
 
