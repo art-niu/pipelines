@@ -1,5 +1,10 @@
 pipeline {
+    agent any
+    stages {
         stage('Checkout'){
+            agent {
+        	docker { image 'arthurniu/gcc-ubuntu:1.0' }
+    	    }
             parallel {
                 stage('Checkout-HelloWorld') {
                     steps{
@@ -14,10 +19,6 @@ pipeline {
                 }
             }
         }
-    agent {
-        docker { image 'arthurniu/gcc-ubuntu:1.0' }
-    }
-    stages {
         stage('Test') {
             steps {
                 sh 'gcc -v'
