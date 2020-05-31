@@ -2,9 +2,6 @@ pipeline {
     agent any
     stages {
         stage('Checkout'){
-            agent {
-        	docker { image 'arthurniu/gcc-ubuntu:1.0' }
-    	    }
             steps{
                         echo 'Removing original source code for internal - /opt/devops/pullrequest/c'
                         sh 'rm -rf /opt/devops/pullrequest/c'
@@ -15,6 +12,16 @@ pipeline {
                         }
            }
         }
+
+        stage('Build') {
+            agent {
+        	docker { image 'arthurniu/gcc-ubuntu:1.0' }
+    	    }
+            steps {
+                sh 'tree /opt/devops'
+            }
+        }
+
         stage('Test') {
             steps {
                 sh 'gcc -v'
