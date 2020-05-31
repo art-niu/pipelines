@@ -20,6 +20,8 @@ pipeline {
         stage('Build') {
             agent {
         	docker { image 'arthurniu/gcc-ubuntu:1.0' }
+                args '-v /opt/devops:/opt/devops -w /opt/devops/pullrequest/c'
+                reuseNode true
     	    }
             steps {
                 sh 'ls /opt/workSpace/HelloWorld/HelloWorld-C/c/helloworld/pullrequest'
