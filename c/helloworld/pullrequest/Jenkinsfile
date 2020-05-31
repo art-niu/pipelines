@@ -22,7 +22,7 @@ pipeline {
         	docker { image 'arthurniu/gcc-ubuntu:1.0' }
     	    }
             steps {
-                sh 'tree /opt/devops'
+                sh 'ls /opt/workSpace/HelloWorld/HelloWorld-C/c/helloworld/pullrequest'
             }
         }
 
