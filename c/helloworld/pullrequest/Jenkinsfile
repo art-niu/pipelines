@@ -36,4 +36,38 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+        	echo 'Artifacts @ jenkins:/opt/artifacts/${BRANCH_NAME}'
+        	echo 'Logs @ jenkins:/opt/buildSpace/logs'
+        	echo 'Source code @ jenkins:/opt/devops'
+        	echo 'Workspace @ jenkins:/opt/workSpace'
+        }
+        success {
+            echo " Build Success"
+            /*
+            emailext (
+                subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: '${SCRIPT, template="jenkins-matrix-email-html.template"}',
+                recipientProviders: [[$class: 'CulpritsRecipientProvider'],[$class: 'RequesterRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+                to:'fei@hotmail.com ouyuan@gmail.com',
+                mimeType: 'text/html'
+            )
+            */
+        }
+        failure {
+            echo " Build Failed"
+            /*
+            emailext (
+                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: '${SCRIPT, template="jenkins-matrix-email-html.template"}' ,
+                recipientProviders: [[$class: 'CulpritsRecipientProvider'],[$class: 'RequesterRecipientProvider'], [$class: 'DevelopersRecipientProvider']],
+                to:'fei@hotmail.com ouyuan@gmail.com',
+                attachLog: true, 
+                compressLog:false,
+                mimeType: 'text/html'
+            )
+            */
+        }
+    }    
 }
