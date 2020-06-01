@@ -38,7 +38,7 @@ pipeline {
     }
     post {
         always {
-        	echo 'Artifacts @ jenkins:/opt/artifacts/${BRANCH_NAME}'
+        	echo 'Artifacts @ jenkins:/opt/artifacts/${params.BRANCH_NAME}'
         	echo 'Logs @ jenkins:/opt/buildSpace/logs'
         	echo 'Source code @ jenkins:/opt/devops'
         	echo 'Workspace @ jenkins:/opt/workSpace'
