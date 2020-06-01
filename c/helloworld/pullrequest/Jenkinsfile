@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(defaultValue: 'Branch_HelloWorld_Feature', description: 'Which branch to build?', name: 'BRANCH_NAME')
+        string(name: 'BRANCH_NAME', defaultValue: 'Branch_HelloWorld_Feature', description: 'Which branch to build?', name: 'BRANCH_NAME')
     }
 
     stages {
@@ -38,13 +38,13 @@ pipeline {
     }
     post {
         always {
-        	echo 'Artifacts @ jenkins:/opt/artifacts/${params.BRANCH_NAME}'
-        	echo 'Logs @ jenkins:/opt/buildSpace/logs'
-        	echo 'Source code @ jenkins:/opt/devops'
-        	echo 'Workspace @ jenkins:/opt/workSpace'
+        	echo "Artifacts @ jenkins:/opt/artifacts/${params.BRANCH_NAME}"
+        	echo "Logs @ jenkins:/opt/logs"
+        	echo "Source code @ jenkins:/opt/devops"
+        	echo "Workspace @ jenkins:/opt/workSpace"
         }
         success {
-            echo " Build Success"
+            echo "Build Success"
             /*
             emailext (
                 subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
@@ -56,7 +56,7 @@ pipeline {
             */
         }
         failure {
-            echo " Build Failed"
+            echo "Build Failed"
             /*
             emailext (
                 subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
