@@ -26,9 +26,9 @@ pipeline {
             
             causeString: 'Triggered on Pull request $BUILD_BRANCH',
             
-            token: 'feature_tomhelloworld',
+            token: 'feature_tomhelloworld_slave',
             
-            // printContributedVariables: true,
+            printContributedVariables: true,
             printPostContent: true,
         ) 
     }
@@ -40,11 +40,10 @@ pipeline {
                 sh 'rm -rf /opt/devops/nightly/tomcat'
                 ws('/opt/devops/nightly/tomcat'){
                     echo "Workspace dir is ${pwd()}"
+                    echo "ref is ${.ref}"
                     echo "Branch to be checked out is ${params.BUILD_BRANCH}"
                     checkout([$class: 'GitSCM', branches: [[name: BUILD_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
                         
-                    //checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
-                            
                 }
             }
         }
@@ -63,6 +62,13 @@ pipeline {
     }
   
     post {
+        always {
+        	echo "Artifacts @ jenkins:/opt/artifacts/${params.BRANCH_NAME}"
+        	echo "Logs @ jenkins:/opt/logs"
+        	echo "Source code @ jenkins:/opt/devops"
+        	echo "Workspace @ jenkins:/opt/jenkins"
+        }
+
         success {
             echo " Build Success"
             emailext (
