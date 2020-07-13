@@ -40,7 +40,6 @@ pipeline {
                 sh 'rm -rf /opt/devops/nightly/tomcat'
                 ws('/opt/devops/nightly/tomcat'){
                     echo "Workspace dir is ${pwd()}"
-                    echo "ref is ${.ref}"
                     echo "Branch to be checked out is ${params.BUILD_BRANCH}"
                     checkout([$class: 'GitSCM', branches: [[name: BUILD_BRANCH]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PruneStaleBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'helloworld']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/art-niu/helloworld.git']]])
                         
